@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from model.chatbot import first_response
-from model.chatbot import load_document
+from model.chatbot import response_chat_history
+from model.v2_chatbot import response_chatbot_v2
+import json
+
 
 app = FastAPI()
 
@@ -14,7 +17,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-
 #Creating endpoint
 @app.get("/response")
 def response(input: str):
@@ -23,9 +25,30 @@ def response(input: str):
 
 #Another endpoint
 @app.get("/responseByTemplate")
-def responseByTemplate(input: str):
-    load_document()
-    return first_response(input)
+def responseByTemplate(user_input: str):
+    return dict(user_input= user_input,
+                answer = first_response(user_input))
+
+
+# Endpoint to respond by history (with separate query parameters)
+@app.get("/responseByHistory")
+def response_by_history(user_input: str, chat_history_frontend: str):
+
+    chat_history_dict = json.loads(chat_history_frontend)
+
+    return {
+        "user_input": user_input,
+        "answer": response_chat_history(user_input, chat_history_dict)
+    }
+
+
+#Endpoint for the VERSION 2 chatbot
+@app.get("/responseChatbot")
+def response_chatbot(user_input: str):
+    return {
+        "user_input": user_input,
+        "answer": response_chatbot_v2(user_input)
+    }
 
 
 #For testing only
