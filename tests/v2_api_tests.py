@@ -1,13 +1,15 @@
 import requests
 import sys
 from langchain.memory import ChatMessageHistory
+import os
 
+API_HOST = os.getenv("API_HOST")
 def call_api(user_input: str):
     #url = "http://127.0.0.1:8000/responseChatbot?user_input={user_input}"
 
     #response = requests.get(url).json()
 
-    url = "http://127.0.0.1:8000/responseChatbot"
+    url = f"{API_HOST}/responseChatbot"
     params = {
         "user_input":user_input
     }
