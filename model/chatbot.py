@@ -25,7 +25,7 @@ embeddings = OpenAIEmbeddings()
 text_splitter = RecursiveCharacterTextSplitter()
 documents = text_splitter.split_documents(pages)
 vector = FAISS.from_documents(documents, embeddings)
-
+#HACER UN NUEVO ARCHIVO PARA CARGAR EN VECTORSTORE TODOS LOS DOCUMENTOS Y DE AHI JALARLOS
 
 #Create retrieval chain
 def first_response(user_input: str):
