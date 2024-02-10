@@ -11,48 +11,30 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
-#Documents
-# Rutas a los documentos TXT
-txt_file1 = "./raw_data/scraped_data.txt"
-txt_file2 = "./raw_data/scraped_data2.txt"
-
-# Lee el contenido de los documentos TXT
-with open(txt_file1, 'r', encoding='utf-8') as file1:
-    content1 = file1.read()
-
-with open(txt_file2, 'r', encoding='utf-8') as file2:
-    content2 = file2.read()
 
 
-loader = PyPDFLoader("./raw_data/Reglamento_CDMX.pdf")
-#documents = loader.load_and_split()
-documents = loader.load()
-# Agrega el contenido de los documentos a la lista de documentos
-documents.append(content1)
-documents.append(content2)
-text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-docs = text_splitter.split_documents(documents)
-embeddings = OpenAIEmbeddings()
-vectorstore = FAISS.from_documents(docs, embeddings)
+
 llm = ChatOpenAI()
 demo_ephemeral_chat_history = ChatMessageHistory()
-saved_db = FAISS.from_documents([], embeddings)
 
+embeddings = OpenAIEmbeddings()
+new_db = FAISS.load_local("data_base", embeddings)
 
+### CON RETRIEVER AND HANDLING DOCUMENTS ###
 #Funcion para usar en el pipe (en la funcion de response_chatbot_v2, abajito)
 def parse_retriever_input(params: Dict):
         return params["messages"][-1].content
 
-
 def response_chatbot_v2(user_input: str):
-    # k is the number of chunks to retrieve, entre mas mejor
-    retriever = saved_db.as_retriever(k=4)
+    # k is the number of chunks to retrieve
+    retriever = new_db.as_retriever(k=4)
 
     #user_input es la consulta para que de ahi jale los documentos (retrieve)
     docs = retriever.invoke(user_input)
 
     question_answering_prompt = ChatPromptTemplate.from_messages(
-        [("system", "Answer the user's questions based on the below context:\n\n{context}"),
+        [("system", "You are a virtual assistent named Pepe with an extense knowledge about the traffic regulations in Mexico City"),
+          ("system", "Answer the user's questions based on the below context:\n\n{context}"),
             MessagesPlaceholder(variable_name="messages")])
 
     document_chain = create_stuff_documents_chain(llm, question_answering_prompt)
@@ -87,10 +69,6 @@ def response_chatbot_v2(user_input: str):
 
     return response["answer"]
 
-# Query tests
-query = "Que se necesita para ser acreedora al subsidio de tenencia?"
-docs = saved_db.similarity_search(query)
-print(docs[0])
 
 
 ### SIN RETRIEVER ###
