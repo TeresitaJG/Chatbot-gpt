@@ -28,6 +28,11 @@ Install the required libraries:
 pip install -r requirements.txt
 ```
 
+### Setting up Raw Data
+Download the `raw_data` folder containing the required PDF and JSON files from [this link](https://drive.google.com/drive/folders/1kESy-hniU9WLsiiAB3aBNHBvWp3bNsq4?usp=sharing). Place the `raw_data` folder into the root directory of the project.
+
+Run the `urls_vectorstore.py` file within the `model` folder. This script creates and populates a FAISS vector store with documents from the downloaded PDF file and a JSON file, returning a FAISS vector store containing embeddings of the documents.
+
 ## Running the Application Locally
 
 ### Endpoints
