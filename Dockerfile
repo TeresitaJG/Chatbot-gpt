@@ -9,6 +9,8 @@ COPY api api
 COPY model model
 COPY raw_data raw_data
 COPY Makefile Makefile
-#mejorar la forma de cargar los datos desde la nube en lugar de raw_data
+COPY utils.py utils.py
 
+
+CMD python /home/tere/code/TfRocio/Chatbot-gpt/model/urls_vectorstore.py
 CMD uvicorn api.api_chat:app --host 0.0.0.0 --port $PORT
