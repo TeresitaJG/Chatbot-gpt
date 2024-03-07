@@ -121,4 +121,4 @@ Keep in mind that you pay for the service as long as it is up.
 
 ## Front-end Repository
 
-For the front-end interface of this chatbot, please refer to the [Justice4EveryoneProject](https://github.com/TfRocio/Justice4EveryoneProjectrepository) repository. It provides the user interface to interact with the chatbot and complements the functionality provided by this back-end.
+For the front-end interface of this chatbot, please refer to the [Justice4EveryoneProject](https://github.com/TfRocio/Justice4EveryoneProject) repository. It provides the user interface to interact with the chatbot and complements the functionality provided by this back-end.
